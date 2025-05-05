@@ -31,15 +31,14 @@ class MovimientoSerializer(serializers.ModelSerializer):
         monto = validated_data['monto']
         cuenta = validated_data['cuenta']
 
-        # Verifica que el tipo sea válido
         if tipo not in ('ingreso', 'egreso'):
             raise ValidationError("El tipo de movimiento debe ser 'ingreso' o 'egreso'.")
 
-        # Obtiene la cuenta y bloquea para evitar condiciones de carrera
+
         cuenta = Cuenta.objects.select_for_update().get(pk=cuenta.pk)
 
 
-        # Realiza la operación de saldo
+
         if tipo == 'ingreso':
             cuenta.saldo += monto
         elif tipo == 'egreso':
@@ -48,10 +47,10 @@ class MovimientoSerializer(serializers.ModelSerializer):
             else:
                 raise ValidationError("Saldo insuficiente para el egreso.")
 
-        # Guarda la cuenta actualizada
+
         cuenta.save()
 
-        # Crea el movimiento
+
         movimiento = Movimiento.objects.create(**validated_data)
         return movimiento
 
@@ -62,10 +61,7 @@ class MovimientoViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        """
-        Sobrescribe get_queryset para filtrar movimientos por el usuario logeado.
-        """
+
         user = self.request.user
-        # Filtra las cuentas del usuario y luego los movimientos de esas cuentas
         cuentas_del_usuario = Cuenta.objects.filter(usuario=user)
         return Movimiento.objects.filter(cuenta__in=cuentas_del_usuario)

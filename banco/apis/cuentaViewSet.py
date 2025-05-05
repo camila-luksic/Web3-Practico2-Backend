@@ -29,18 +29,15 @@ class CuentaSerializer(serializers.ModelSerializer):
 class CuentaViewSet(viewsets.ModelViewSet):
     queryset = Cuenta.objects.all()
     serializer_class = CuentaSerializer
-    permission_classes = [permissions.IsAuthenticated]  # Solo usuarios autenticados
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        user = self.request.user  # usuario logeado
-        return Cuenta.objects.filter(usuario=user)  # solo sus cuentas
+        user = self.request.user
+        return Cuenta.objects.filter(usuario=user)
 
     @action(detail=False, methods=['get'], permission_classes=[permissions.IsAuthenticated])
     def all_accounts(self, request):
-        """
-        Endpoint para obtener todas las cuentas.
-        Ahora solo accesible para usuarios autenticados.
-        """
+
         serializer = self.get_serializer(Cuenta.objects.all(), many=True)
         return Response(serializer.data)
 

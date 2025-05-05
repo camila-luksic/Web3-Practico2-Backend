@@ -8,7 +8,7 @@ class Beneficiario(models.Model):
     nombreCompleto = models.CharField(max_length=100)
     # Cuenta de la cual es beneficiario
     cuenta_beneficiaria = models.ForeignKey(
-        Cuenta, on_delete=models.CASCADE, related_name='beneficiarios_de' ,default=1
+        Cuenta, on_delete=models.CASCADE, related_name='beneficiarios_de'
     )
     # Usuario que es el beneficiario
     usuario = models.ForeignKey(
@@ -16,7 +16,7 @@ class Beneficiario(models.Model):
     )
     # Cuenta propia del beneficiario
     cuenta_propia = models.ForeignKey(
-        Cuenta, on_delete=models.CASCADE, related_name='propietarios',default=1
+        Cuenta, on_delete=models.CASCADE, related_name='propietarios'
     )
 
     def __str__(self):

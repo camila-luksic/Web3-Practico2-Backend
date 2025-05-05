@@ -26,4 +26,3 @@ class Cuenta(models.Model):
     def __str__(self):
         return f"{self.nombreCompleto} {self.nroCuenta} "
 
-#Me falta agregar es autenticated en todas
